@@ -1,0 +1,10 @@
+language: java
+script: gradlew build
+deploy:
+  provider: releases
+  api_key:
+    secure: Wo1SD7uoVgPI6MWrFcQ21E5LS2nMOhfP+Q38VLJpYwAFCDg1iFXdRTKjb1F5Jgcl4pubXiw8U6DJJIsFjl90UDDeRjLRJL5mc1OLhFNGdfxgG4o3KSXuMwrmOlprBIl2FmfR5ib+CURbahMqvlr0mgY/DUW278Kqw3OCjWmRQ6BxKKs7qUtub8F63re8ckKzO4Fk58rMpF06rRl6w9X7njt2PUVrpDKTGCuf55na74nk+GKf+DmfVjQpG198TmRBCim5nki34xd7glMWIWMR3Du9q503Ii+ZkHOgxxhKxWhaBQ3ccnVCjK6+ZDNwa9Ll7cblh/DD8wLGFWdwUSyPJ8n7zvPYWIGTSiHaEsfjW/CDTfnAQ/vqy6YjitVrWSVA5I/QUx5yxyhmJbnU7ZYeiH/Pdoy9Khc3Xi9gZdH4uQxJOPNV2E83CevmWUvehPLnrfnnJPs/W8PRIkAcELbJ+zsykQCuHof34VUdEmCEUpIKLd0BKvhSZLg2eBU8ttX4G2TUTSjMP2GbiRNfqK2AZT9zoUQyjlzPmV/cT+VN9HtgU0x9K1F1LyDCZ/sVqLLvMJI95J/6LHQLuq+brING/625cLKT5NrXH8PL19mCzzu45KozI1Nm/bKVRiTK/Ulsh78A94+bcRFXy7DrjMfVhKEf6gbiF4AFsmS/lNsbcBI=
+  file: build/libs/1018PowerUpJava.jar
+  on:
+    repo: firecrafty/1018PowerUpJava
+    tags: true
