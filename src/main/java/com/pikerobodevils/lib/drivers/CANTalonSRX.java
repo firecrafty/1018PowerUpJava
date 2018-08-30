@@ -1,7 +1,11 @@
 package com.pikerobodevils.lib.drivers;
 
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motion.MotionProfileStatus;
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.Notifier;
 
 /**
  * @author Ryan Blue
@@ -174,6 +178,26 @@ public class CANTalonSRX extends TalonSRX {
         configMaxIntegralAccumulator(slotIdx, values.maxIntegralAccumulator, 0);
         configClosedLoopPeakOutput(slotIdx, values.closedLoopPeakOutput, 0);
         configClosedLoopPeriod(slotIdx, values.closedLoopPeriodMs, 0);
+    }
+
+    private boolean isLooperRunning;
+    private double looperPeriod;
+
+    private Notifier motionProfileLooper = new Notifier(this::handleMotionProfileSafety);
+
+    private void handleMotionProfileSafety() {
+        //TODO: implement pushing points and auto-stop
+    }
+
+    @Override
+    public ErrorCode pushMotionProfileTrajectory(TrajectoryPoint trajPt) {
+        if(!isLooperRunning) {
+            looperPeriod = trajPt.timeDur.value/2000d;
+        } else {
+            looperPeriod = Math.max(trajPt.timeDur.value/2000d, looperPeriod);
+        }
+        motionProfileLooper.startPeriodic(looperPeriod);
+        return super.pushMotionProfileTrajectory(trajPt);
     }
 
     @Override

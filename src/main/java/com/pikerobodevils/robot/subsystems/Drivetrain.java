@@ -4,12 +4,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.kauailabs.navx.frc.AHRS;
 import com.pikerobodevils.lib.drivers.CANTalonSRX;
+import com.pikerobodevils.lib.motion.DrivetrainProfile;
 import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
 import com.pikerobodevils.lib.util.drive.DriveSignal;
 import com.pikerobodevils.robot.RobotConstants;
 import com.pikerobodevils.robot.commands.drivetrain.TeleopDrive;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -35,6 +35,7 @@ public class Drivetrain extends Subsystem {
     private CANTalonSRX rightSlaveB = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_B_ID, rightMaster);
     private AHRS navX = new AHRS(SPI.Port.kMXP);
     private DifferentialDriveJoystickMap driveHelper = new DifferentialDriveJoystickMap();
+
     private Drivetrain() {
         rightMaster.setInverted(true);
         rightSlaveA.setInverted(true);
@@ -52,7 +53,7 @@ public class Drivetrain extends Subsystem {
         rightMaster.set(ControlMode.PercentOutput, signal.right);
     }
 
-    public void loadMotionProfile() {
+    public void loadMotionProfile(DrivetrainProfile profile) {
 
     }
 

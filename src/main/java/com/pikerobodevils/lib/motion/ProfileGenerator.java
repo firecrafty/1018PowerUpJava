@@ -16,6 +16,10 @@ public class ProfileGenerator {
     private static final String fileExtension = "csv";
     private static ObjectMapper objectMapper = new ObjectMapper();
 
+    public static DrivetrainProfile getDrivetrainProfile(ProfileSettings profile) {
+        return new DrivetrainProfile(getProfile(profile));
+    }
+
     public static Pair<Trajectory, Trajectory> getProfile(ProfileSettings profile) {
         String serialized;
         try {
