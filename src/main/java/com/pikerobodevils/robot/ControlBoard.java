@@ -72,7 +72,12 @@ public class ControlBoard {
         registerCommands();
     }
 
+    /**
+     * Returns the throttle (forwards/backwards) value for the robot's motion
+     * @return the throttle value
+     */
     public double getThrottle() {
+        //Y axis is inverted
         return -leftStick.getY();
     }
 
