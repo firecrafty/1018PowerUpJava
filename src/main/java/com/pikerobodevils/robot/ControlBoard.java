@@ -42,8 +42,8 @@ public class ControlBoard {
     private static final int CLAW_OPEN_BUTTON = 10;
     private static final int CLAW_CLOSE_BUTTON = 11;
 
-    private Joystick leftStick = new Joystick(LEFT_STICK_PORT);
-    private Joystick rightStick = new Joystick(RIGHT_STICK_PORT);
+    public Joystick leftStick = new Joystick(LEFT_STICK_PORT);
+    public Joystick rightStick = new Joystick(RIGHT_STICK_PORT);
     private Joystick buttonPanel = new Joystick(BUTTON_PANEL_PORT);
 
     private JoystickButton switchButton = new JoystickButton(buttonPanel, SWITCH_BUTTON);
@@ -73,7 +73,7 @@ public class ControlBoard {
     }
 
     public double getThrottle() {
-        return leftStick.getY();
+        return -leftStick.getY();
     }
 
     public double getTurn() {

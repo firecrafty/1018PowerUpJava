@@ -7,15 +7,16 @@ import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
 import com.pikerobodevils.lib.util.drive.DriveSignal;
 import com.pikerobodevils.robot.RobotConstants;
-import com.pikerobodevils.robot.commands.drivetrain.TeleopDrive;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * @author Ryan Blue
  */
 public class Drivetrain extends Subsystem {
+
+
     CANTalonSRX.Configuration masterConfig = new CANTalonSRX.Configuration() {
         {
             continuousCurrentLimit = 18;
@@ -33,8 +34,10 @@ public class Drivetrain extends Subsystem {
     private CANTalonSRX rightMaster = CANTalonSRX.fromConfiguration(RobotConstants.RIGHT_MASTER_ID, masterConfig);
     private CANTalonSRX rightSlaveA = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_A_ID, rightMaster);
     private CANTalonSRX rightSlaveB = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_B_ID, rightMaster);
+    private DifferentialDrive driveDirect = new DifferentialDrive(leftMaster, rightMaster);
     private AHRS navX = new AHRS(SPI.Port.kMXP);
     private DifferentialDriveJoystickMap driveHelper = new DifferentialDriveJoystickMap();
+
     private Drivetrain() {
         rightMaster.setInverted(true);
         rightSlaveA.setInverted(true);
@@ -69,6 +72,7 @@ public class Drivetrain extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new TeleopDrive());
+        //not sure why this isn't working
+        //setDefaultCommand(new TeleopDrive());
     }
 }

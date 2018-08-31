@@ -2,11 +2,12 @@ package com.pikerobodevils.lib.drivers;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.SpeedController;
 
 /**
  * @author Ryan Blue
  */
-public class CANTalonSRX extends TalonSRX {
+public class CANTalonSRX extends TalonSRX implements SpeedController {
     private double mLastSetValue = Double.NaN;
 
     public CANTalonSRX(int deviceNumber) {
@@ -183,4 +184,28 @@ public class CANTalonSRX extends TalonSRX {
         }
     }
 
+    @Override
+    public void set(double speed) {
+        set(ControlMode.PercentOutput, speed);
+    }
+
+    @Override
+    public double get() {
+        return getMotorOutputPercent();
+    }
+
+    @Override
+    public void disable() {
+        stopMotor();
+    }
+
+    @Override
+    public void stopMotor() {
+        set(ControlMode.Disabled, 0);
+    }
+
+    @Override
+    public void pidWrite(double output) {
+        System.out.println("why would you do this");
+    }
 }
