@@ -43,15 +43,16 @@ public class Elevator extends Subsystem {
             }
         });*/
         elevatorSafetyTask.startPeriodic(0.01);
+        master.set(ControlMode.MotionMagic, ElevatorSetpoint.FLOOR.value);
     }
 
     public void setOpenLoop(double speed) {
-        if(!allowOpenLoopDown()) {
+        if (!allowOpenLoopDown()) {
             MathUtils.coerceInRange(speed, 0, 1);
-        } else if(allowOpenLoopUp()) {
-            MathUtils.coerceInRange(speed, -1,0);
+        } else if (allowOpenLoopUp()) {
+            MathUtils.coerceInRange(speed, -1, 0);
         }
-        if(speed == 0) {
+        if (speed == 0) {
             resumeClosedLoop();
         }
         master.set(ControlMode.PercentOutput, speed);
@@ -72,6 +73,7 @@ public class Elevator extends Subsystem {
     public void bumpDown() {
         setClosedLoop(getClosedLoopTarget() - 500);
     }
+
     public void bumpUp() {
         setClosedLoop(getClosedLoopTarget() + 500);
     }
@@ -79,6 +81,7 @@ public class Elevator extends Subsystem {
     public void stop() {
         master.set(ControlMode.Disabled, 0);
     }
+
     /**
      * Checks whether elevator is at the bottom (stow) position
      *
@@ -119,10 +122,12 @@ public class Elevator extends Subsystem {
         if (isAtBottom()) {
             master.setSelectedSensorPosition(0, 0, 0);
         }
-        if(!allowOpenLoopDown() && master.getControlMode() == ControlMode.PercentOutput && master.getMotorOutputPercent() < 0) {
-            resumeClosedLoop();
-        } else if(allowOpenLoopUp() && master.getControlMode() == ControlMode.PercentOutput && master.getMotorOutputPercent() > 0) {
-            resumeClosedLoop();
+        if (master.getControlMode() == ControlMode.PercentOutput) {
+            if (!allowOpenLoopDown() && master.getMotorOutputPercent() < 0) {
+                resumeClosedLoop();
+            } else if (allowOpenLoopUp() && master.getMotorOutputPercent() > 0) {
+                resumeClosedLoop();
+            }
         }
 
     }
