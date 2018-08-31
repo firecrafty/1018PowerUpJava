@@ -13,6 +13,7 @@ public class IntakeRollers extends Subsystem {
         {
             continuousCurrentLimit = 20;
             enableCurrentLimit = true;
+            invert = true;
         }
     });
     CANTalonSRX intakeSlave = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.INTAKE_SLAVE_ID, intakeMaster);

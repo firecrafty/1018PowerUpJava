@@ -99,7 +99,7 @@ public class ControlBoard {
         wristHalfOutButton.whenPressed(new WristSetAngleCommand(Wrist.WristSetpoint.HALF_OUT));
         wristStowButton.whenPressed(new WristSetAngleCommand(Wrist.WristSetpoint.STOW));
         rollersInButton.whileHeld(new IntakeCubeManual());
-        rollersOutButton.whenPressed(new EjectCubeManual());
+        rollersOutButton.whileHeld(new EjectCubeManual());
         clawOpenButton.whenPressed(new SetGripperCommand(IntakeGripper.State.OPEN));
         clawCloseButton.whenPressed(new SetGripperCommand(IntakeGripper.State.CLOSE));
     }
