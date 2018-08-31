@@ -59,9 +59,12 @@ public class Drivetrain extends Subsystem {
 
     }
 
-    public static Drivetrain mInstance = new Drivetrain();
+    private static Drivetrain mInstance;
 
     public static Drivetrain getInstance() {
+        if (mInstance == null) {
+            mInstance = new Drivetrain();
+        }
         return mInstance;
     }
 

@@ -163,9 +163,12 @@ public class Elevator extends Subsystem {
         }
     }
 
-    private static Elevator mInstance = new Elevator();
+    private static Elevator mInstance;
 
     public static Elevator getInstance() {
+        if (mInstance == null) {
+            mInstance = new Elevator();
+        }
         return mInstance;
     }
 

@@ -104,9 +104,12 @@ public class ControlBoard {
         clawCloseButton.whenPressed(new SetGripperCommand(IntakeGripper.State.CLOSE));
     }
 
-    private static ControlBoard mInstance = new ControlBoard();
+    private static ControlBoard mInstance;
 
     public static ControlBoard getInstance() {
+        if (mInstance == null) {
+            mInstance = new ControlBoard();
+        }
         return mInstance;
     }
 

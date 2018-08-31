@@ -37,9 +37,12 @@ public class IntakeGripper extends Subsystem {
 
     }
 
-    private static IntakeGripper mInstance = new IntakeGripper();
+    private static IntakeGripper mInstance;
 
     public static IntakeGripper getInstance() {
+        if (mInstance == null) {
+            mInstance = new IntakeGripper();
+        }
         return mInstance;
     }
 }

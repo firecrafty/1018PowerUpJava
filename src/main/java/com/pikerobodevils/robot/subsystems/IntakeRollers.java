@@ -36,9 +36,12 @@ public class IntakeRollers extends Subsystem {
 
     }
 
-    private static IntakeRollers mInstance = new IntakeRollers();
+    private static IntakeRollers mInstance;
 
     public static IntakeRollers getInstance() {
+        if (mInstance == null) {
+            mInstance = new IntakeRollers();
+        }
         return mInstance;
     }
 }

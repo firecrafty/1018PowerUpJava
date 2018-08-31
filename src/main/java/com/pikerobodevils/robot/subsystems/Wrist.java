@@ -113,9 +113,12 @@ public class Wrist extends Subsystem {
         }
     }
 
-    private static Wrist mInstance = new Wrist();
+    private static Wrist mInstance;
 
     public static Wrist getInstance() {
+        if (mInstance == null) {
+            mInstance = new Wrist();
+        }
         return mInstance;
     }
 }
