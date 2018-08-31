@@ -38,6 +38,8 @@ public class Wrist extends Subsystem {
     private WristSetpoint requestedSetpoint;
 
     private Wrist() {
+        //Prevents NPEs
+        requestedSetpoint = WristSetpoint.STOW;
         wristSafetyTask.startPeriodic(0.01);
     }
 
@@ -106,7 +108,8 @@ public class Wrist extends Subsystem {
         }
 
         private int getScoreAngle() {
-            return lookup.lowerEntry(Elevator.getInstance().getClosedLoopTarget()).getValue();
+            //floorEntry includes search value, lowerEntry excludes
+            return lookup.floorEntry(Elevator.getInstance().getClosedLoopTarget()).getValue();
         }
     }
 
