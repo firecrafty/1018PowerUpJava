@@ -1,10 +1,12 @@
 package com.pikerobodevils.robot.commands.claw;
 
 import com.pikerobodevils.robot.subsystems.IntakeRollers;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class IntakeCubeManual extends Command {
     IntakeRollers rollers = IntakeRollers.getInstance();
+
     public IntakeCubeManual() {
         requires(rollers);
     }

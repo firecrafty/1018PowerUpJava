@@ -5,10 +5,11 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.util.MathUtils;
 import com.pikerobodevils.robot.RobotConstants;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
 import java.util.TreeMap;
+
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * @author Ryan Blue

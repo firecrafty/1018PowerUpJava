@@ -1,7 +1,17 @@
 package com.pikerobodevils.lib.drivers;
 
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
@@ -32,7 +42,9 @@ public class CANTalonSRX extends TalonSRX implements SpeedController {
     }
 
     public static class Configuration {
-        public Configuration(){}
+        public Configuration() {
+        }
+
         public boolean invert = false;
         public double openLoopRampRate = 0;
         public double closedLoopRampRate = 0;
@@ -179,7 +191,7 @@ public class CANTalonSRX extends TalonSRX implements SpeedController {
 
     @Override
     public void set(ControlMode mode, double outputValue) {
-        if(outputValue != mLastSetValue || mode != getControlMode()) {
+        if (outputValue != mLastSetValue || mode != getControlMode()) {
             super.set(mode, outputValue);
         }
     }

@@ -12,6 +12,7 @@ import com.pikerobodevils.robot.commands.wrist.WristSetAngleCommand;
 import com.pikerobodevils.robot.subsystems.Elevator;
 import com.pikerobodevils.robot.subsystems.IntakeGripper;
 import com.pikerobodevils.robot.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
@@ -74,6 +75,7 @@ public class ControlBoard {
 
     /**
      * Returns the throttle (forwards/backwards) value for the robot's motion
+     *
      * @return the throttle value
      */
     public double getThrottle() {

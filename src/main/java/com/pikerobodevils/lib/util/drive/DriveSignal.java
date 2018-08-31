@@ -6,6 +6,8 @@ package com.pikerobodevils.lib.util.drive;
 public class DriveSignal {
     public double left, right;
 
+    public static DriveSignal NEUTRAL = new DriveSignal(0, 0);
+
     public DriveSignal() {
     }
 
@@ -13,8 +15,6 @@ public class DriveSignal {
         this.left = left;
         this.right = right;
     }
-
-    public static DriveSignal NEUTRAL = new DriveSignal(0, 0);
 
     @Override
     public String toString() {

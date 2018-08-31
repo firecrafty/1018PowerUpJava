@@ -1,9 +1,9 @@
 package com.pikerobodevils.lib.motion;
 
+import java.util.List;
+
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
-
-import java.util.List;
 
 public class ProfileSettings {
     public int hz;
