@@ -14,28 +14,22 @@ public class IntakeGripper extends Subsystem {
         set(State.CLOSE);
     }
 
-    private void open() {
-        solenoid.set(DoubleSolenoid.Value.kForward);
-    }
-
-    private void close() {
-        solenoid.set(DoubleSolenoid.Value.kReverse);
-    }
-
     public void set(State state) {
         if (state == null) {
             throw new NullPointerException("State cannot be null");
         }
-        if (state == State.OPEN) {
-            open();
-        } else if (state == State.CLOSE) {
-            close();
-        }
+        solenoid.set(state.value);
     }
 
     public enum State {
-        OPEN,
-        CLOSE
+        OPEN(DoubleSolenoid.Value.kReverse),
+        CLOSE(DoubleSolenoid.Value.kReverse);
+
+        public final DoubleSolenoid.Value value;
+
+        State(DoubleSolenoid.Value value) {
+            this.value = value;
+        }
     }
 
     @Override
