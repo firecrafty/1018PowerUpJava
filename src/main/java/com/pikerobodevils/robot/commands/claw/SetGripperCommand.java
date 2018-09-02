@@ -2,9 +2,9 @@ package com.pikerobodevils.robot.commands.claw;
 
 import com.pikerobodevils.robot.subsystems.IntakeGripper;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class SetGripperCommand extends Command {
+public class SetGripperCommand extends InstantCommand {
     private IntakeGripper gripper = IntakeGripper.getInstance();
     private IntakeGripper.State state;
 
@@ -16,10 +16,5 @@ public class SetGripperCommand extends Command {
     @Override
     protected void initialize() {
         gripper.set(state);
-    }
-
-    @Override
-    protected boolean isFinished() {
-        return true;
     }
 }
