@@ -74,7 +74,7 @@ public class ControlBoard {
     }
 
     /**
-     * Returns the throttle (forwards/backwards) value for the robot's motion
+     * Returns the throttle (forwards/backwards) value for the robot's motion.
      *
      * @return the throttle value
      */
@@ -83,10 +83,18 @@ public class ControlBoard {
         return -leftStick.getY();
     }
 
+    /**
+     * Returns the turn (left/right) value for the robot's motion.
+     *
+     * @return the turn value
+     */
     public double getTurn() {
         return rightStick.getX();
     }
 
+    /**
+     * Registers all operator interface commands with the {@link edu.wpi.first.wpilibj.command.Scheduler}.
+     */
     private void registerCommands() {
         Command switchCommand = new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SWITCH);
         switchButton.whenPressed(switchCommand);
