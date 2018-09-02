@@ -24,7 +24,7 @@ public class IntakeGripper extends Subsystem {
 
     public enum State {
         OPEN(DoubleSolenoid.Value.kReverse),
-        CLOSE(DoubleSolenoid.Value.kReverse);
+        CLOSE(DoubleSolenoid.Value.kForward);
 
         public final DoubleSolenoid.Value value;
 
