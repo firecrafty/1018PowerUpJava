@@ -32,7 +32,15 @@ public class Elevator extends Subsystem {
         }
     });
     private CANTalonSRX slave = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.ELEVATOR_SLAVE_ID, master);
+    /**
+     * Banner retroreflective infrared sensor for detecting bottom of elevator
+     */
     private DigitalInput bannerSensor = new DigitalInput(0);
+    /**
+     * Runs the background safety check for the elevator.
+     *
+     * @see Elevator#updateElevatorSafety()
+     */
     private Notifier elevatorSafetyTask = new Notifier(this::updateElevatorSafety);
 
     private Elevator() {
@@ -44,6 +52,7 @@ public class Elevator extends Subsystem {
             }
         });*/
         elevatorSafetyTask.startPeriodic(0.01);
+        //Initialize the controller to MotionMagic mode so getClosedLoopTarget doesn't fail
         master.set(ControlMode.MotionMagic, ElevatorSetpoint.FLOOR.value);
     }
 
