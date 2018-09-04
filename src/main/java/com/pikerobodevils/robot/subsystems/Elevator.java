@@ -51,9 +51,10 @@ public class Elevator extends Subsystem {
                 master.setSelectedSensorPosition(0, 0, 0);
             }
         });*/
-        elevatorSafetyTask.startPeriodic(0.01);
         //Initialize the controller to MotionMagic mode so getClosedLoopTarget doesn't fail
+        //needs to happen before safety task starts
         master.set(ControlMode.MotionMagic, ElevatorSetpoint.FLOOR.value);
+        elevatorSafetyTask.startPeriodic(0.01);
     }
 
     public double limitDirection(double speed) {
