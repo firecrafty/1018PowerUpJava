@@ -57,16 +57,18 @@ public class Elevator extends Subsystem {
     }
 
     public double limitDirection(double speed) {
-        if (!allowOpenLoopDown()) {
-            return MathUtils.coerceInRange(speed, 0, 1);
-        } else if (allowOpenLoopUp()) {
+        boolean allowUp = allowOpenLoopUp(), allowDown = allowOpenLoopDown();
+        if (allowUp && allowDown) {
+            return speed;
+        } else if (!allowUp) {
             return MathUtils.coerceInRange(speed, -1, 0);
         } else {
-            return speed;
+            return MathUtils.coerceInRange(speed, 0, 1);
         }
     }
 
     public void setOpenLoop(double speed) {
+        speed = limitDirection(speed);
         if (speed == 0) {
             resumeClosedLoop();
         }
