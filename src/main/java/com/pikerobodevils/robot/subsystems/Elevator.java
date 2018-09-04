@@ -43,6 +43,8 @@ public class Elevator extends Subsystem {
      */
     private Notifier elevatorSafetyTask = new Notifier(this::updateElevatorSafety);
 
+    private double openLoopPower = 0;
+
     private Elevator() {
         /*bannerSensor.setUpSourceEdge(false, true);
         bannerSensor.requestInterrupts(new InterruptHandlerFunction<Object>() {
@@ -68,9 +70,10 @@ public class Elevator extends Subsystem {
         }
     }
 
+
     public void setOpenLoop(double speed) {
-        speed = limitDirection(speed);
-        if (speed == 0) {
+        openLoopPower = limitDirection(speed);
+        if (openLoopPower == 0) {
             resumeClosedLoop();
         }
         master.set(ControlMode.PercentOutput, speed);
@@ -85,6 +88,7 @@ public class Elevator extends Subsystem {
     }
 
     public void resumeClosedLoop() {
+        openLoopPower = 0;
         setClosedLoop(master.getSelectedSensorPosition(0));
     }
 
@@ -132,20 +136,31 @@ public class Elevator extends Subsystem {
         return height <= 200 || height >= 3500;
     }
 
+    /**
+     * Returns true when the elevator height is within (+/-) 100 STUs of the current setpoint
+     *
+     * @return true if the elevator is in range; otherwise false.
+     */
     public boolean onTarget() {
         return MathUtils.isInRange(master.getClosedLoopError(0), -100, 100);
     }
 
+    /**
+     * Runs the elevator safety task
+     * <p><ul>
+     * <li>Resets the encoder if the retroreflective sensor detects that the frame is at the bottom
+     * <li>If the elevator is in open-loop mode, limits the direction of the elevator
+     * </ul>
+     *
+     * @see #setOpenLoop(double)
+     * @see #limitDirection(double)
+     */
     private void updateElevatorSafety() {
         if (isAtBottom()) {
             master.setSelectedSensorPosition(0, 0, 0);
         }
         if (master.getControlMode() == ControlMode.PercentOutput) {
-            if (!allowOpenLoopDown() && master.getMotorOutputPercent() < 0) {
-                resumeClosedLoop();
-            } else if (allowOpenLoopUp() && master.getMotorOutputPercent() > 0) {
-                resumeClosedLoop();
-            }
+            setOpenLoop(openLoopPower);
         }
 
     }
