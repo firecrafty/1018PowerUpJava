@@ -56,12 +56,17 @@ public class Elevator extends Subsystem {
         master.set(ControlMode.MotionMagic, ElevatorSetpoint.FLOOR.value);
     }
 
-    public void setOpenLoop(double speed) {
+    public double limitDirection(double speed) {
         if (!allowOpenLoopDown()) {
-            MathUtils.coerceInRange(speed, 0, 1);
+            return MathUtils.coerceInRange(speed, 0, 1);
         } else if (allowOpenLoopUp()) {
-            MathUtils.coerceInRange(speed, -1, 0);
+            return MathUtils.coerceInRange(speed, -1, 0);
+        } else {
+            return speed;
         }
+    }
+
+    public void setOpenLoop(double speed) {
         if (speed == 0) {
             resumeClosedLoop();
         }
