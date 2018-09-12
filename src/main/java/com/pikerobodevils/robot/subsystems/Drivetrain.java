@@ -40,6 +40,7 @@ public class Drivetrain extends Subsystem {
     private DifferentialDriveJoystickMap driveHelper = new DifferentialDriveJoystickMap();
 
     private Drivetrain() {
+        super();
         //So for some reason wpilib thought it was a good idea to invert during joystick mapping...
         //But we have to invert these so closed loop works...
         rightMaster.setInverted(true);

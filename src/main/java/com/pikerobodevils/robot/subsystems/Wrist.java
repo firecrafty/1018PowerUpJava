@@ -39,10 +39,10 @@ public class Wrist extends Subsystem {
     private WristSetpoint requestedSetpoint;
 
     private Wrist() {
+        super();
         wristMotor.setSelectedSensorPosition(0, 0, 0);
         //Prevents NPEs
         requestedSetpoint = WristSetpoint.STOW;
-        wristSafetyTask.startPeriodic(0.01);
     }
 
     private int prevElevatorTarget;
@@ -65,6 +65,11 @@ public class Wrist extends Subsystem {
 
     public boolean onTarget() {
         return MathUtils.isInRange(wristMotor.getClosedLoopError(0), -100, 100);
+    }
+
+    @Override
+    public void periodic() {
+        updateWristTick();
     }
 
     private void updateWristTick() {

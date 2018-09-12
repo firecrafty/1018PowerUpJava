@@ -36,16 +36,11 @@ public class Elevator extends Subsystem {
      * Banner retroreflective infrared sensor for detecting bottom of elevator
      */
     private DigitalInput bannerSensor = new DigitalInput(0);
-    /**
-     * Runs the background safety check for the elevator.
-     *
-     * @see Elevator#updateElevatorSafety()
-     */
-    private Notifier elevatorSafetyTask = new Notifier(this::updateElevatorSafety);
 
     private double openLoopPower = 0;
 
     private Elevator() {
+        super();
         /*bannerSensor.setUpSourceEdge(false, true);
         bannerSensor.requestInterrupts(new InterruptHandlerFunction<Object>() {
             @Override
@@ -56,7 +51,6 @@ public class Elevator extends Subsystem {
         //Initialize the controller to MotionMagic mode so getClosedLoopTarget doesn't fail
         //needs to happen before safety task starts
         master.set(ControlMode.MotionMagic, ElevatorSetpoint.FLOOR.value);
-        elevatorSafetyTask.startPeriodic(0.01);
     }
 
     public double limitDirection(double speed) {
@@ -143,6 +137,12 @@ public class Elevator extends Subsystem {
      */
     public boolean onTarget() {
         return MathUtils.isInRange(master.getClosedLoopError(0), -100, 100);
+    }
+
+    //Replaces Notifier
+    @Override
+    public void periodic() {
+        updateElevatorSafety();
     }
 
     /**
