@@ -1,7 +1,6 @@
 package com.pikerobodevils.robot;
 
 import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
-import com.pikerobodevils.lib.util.drive.DriveSignal;
 import com.pikerobodevils.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -47,9 +46,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        DriveSignal signal = mixer.arcadeDrive(controlBoard.getThrottle(), controlBoard.getTurn());
-        //drivetrain.setOpenLoop(signal);
-        //drivetrain.drive(controlBoard.getThrottle(), controlBoard.getTurn());
         Scheduler.getInstance().run();
     }
 

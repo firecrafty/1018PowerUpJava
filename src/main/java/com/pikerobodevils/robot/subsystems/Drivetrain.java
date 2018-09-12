@@ -2,15 +2,16 @@ package com.pikerobodevils.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
 import com.pikerobodevils.lib.util.drive.DriveSignal;
 import com.pikerobodevils.robot.RobotConstants;
+import com.pikerobodevils.robot.commands.drivetrain.TeleopDrive;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * @author Ryan Blue
@@ -35,7 +36,6 @@ public class Drivetrain extends Subsystem {
     private CANTalonSRX rightMaster = CANTalonSRX.fromConfiguration(RobotConstants.RIGHT_MASTER_ID, masterConfig);
     private CANTalonSRX rightSlaveA = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_A_ID, rightMaster);
     private CANTalonSRX rightSlaveB = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_B_ID, rightMaster);
-    private DifferentialDrive driveDirect = new DifferentialDrive(leftMaster, rightMaster);
     private AHRS navX = new AHRS(SPI.Port.kMXP);
     private DifferentialDriveJoystickMap driveHelper = new DifferentialDriveJoystickMap();
 
@@ -45,6 +45,12 @@ public class Drivetrain extends Subsystem {
         rightMaster.setInverted(true);
         rightSlaveA.setInverted(true);
         rightSlaveB.setInverted(true);
+        leftMaster.setNeutralMode(NeutralMode.Coast);
+        leftSlaveA.setNeutralMode(NeutralMode.Coast);
+        leftSlaveB.setNeutralMode(NeutralMode.Coast);
+        rightMaster.setNeutralMode(NeutralMode.Coast);
+        rightSlaveA.setNeutralMode(NeutralMode.Coast);
+        rightSlaveB.setNeutralMode(NeutralMode.Coast);
     }
 
     public void drive(double xSpeed, double zRotation) {
@@ -80,6 +86,6 @@ public class Drivetrain extends Subsystem {
     @Override
     protected void initDefaultCommand() {
         //not sure why this isn't working
-        //setDefaultCommand(new TeleopDrive());
+        setDefaultCommand(new TeleopDrive());
     }
 }
