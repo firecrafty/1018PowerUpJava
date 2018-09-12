@@ -96,17 +96,17 @@ public class ControlBoard {
      * Registers all operator interface commands with the {@link edu.wpi.first.wpilibj.command.Scheduler}.
      */
     private void registerCommands() {
-        Command switchCommand = new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SWITCH);
+        Command switchCommand = new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SWITCH, Wrist.WristSetpoint.HALF_OUT);
         switchButton.whenPressed(switchCommand);
         switchTwoButton.whenPressed(switchCommand);
-        scaleLowButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_LOW));
-        scaleMidButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_MID));
-        scaleHighButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_HIGH));
-        scaleLowTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_LOW_TWO));
-        scaleMidTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_MID_TWO));
-        scaleHighTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_HIGH_TWO));
+        scaleLowButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_LOW, Wrist.WristSetpoint.HALF_OUT));
+        scaleMidButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_MID, Wrist.WristSetpoint.HALF_OUT));
+        scaleHighButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_HIGH, Wrist.WristSetpoint.HALF_OUT));
+        scaleLowTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_LOW_TWO, Wrist.WristSetpoint.SCORE_INTAKE));
+        scaleMidTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_MID_TWO, Wrist.WristSetpoint.SCORE_INTAKE));
+        scaleHighTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_HIGH_TWO, Wrist.WristSetpoint.SCORE_INTAKE));
         exchangeInButton.whenPressed(new SuperstructurePrepForIntakeCommand());
-        exchangeOutButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.EXCHANGE_PORTAL));
+        exchangeOutButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.EXCHANGE_PORTAL, Wrist.WristSetpoint.SCORE_INTAKE));
         stowButton.whenPressed(new SuperstructureStowCommand());
         elevatorBumpUpButton.whenPressed(new ElevatorBumpUpCommand());
         elevatorBumpDownButton.whenPressed(new ElevatorBumpDownCommand());

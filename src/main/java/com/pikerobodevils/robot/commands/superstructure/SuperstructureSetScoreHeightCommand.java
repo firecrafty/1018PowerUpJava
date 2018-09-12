@@ -8,8 +8,8 @@ import com.pikerobodevils.robot.subsystems.Wrist;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class SuperstructureSetScoreHeightCommand extends CommandGroup {
-    public SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint elevatorSetpoint) {
+    public SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint elevatorSetpoint, Wrist.WristSetpoint wristSetpoint) {
         addParallel(new ElevatorSetHeightCommand(elevatorSetpoint));
-        addParallel(new WristSetAngleCommand(Wrist.WristSetpoint.SCORE_INTAKE));
+        addParallel(new WristSetAngleCommand(wristSetpoint));
     }
 }
