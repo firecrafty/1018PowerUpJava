@@ -16,14 +16,14 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Wrist extends Subsystem {
 
-    private CANTalonSRX wristMotor = CANTalonSRX.fromConfiguration(RobotConstants.WRIST_ID, new CANTalonSRX.Configuration() {
+    public CANTalonSRX wristMotor = CANTalonSRX.fromConfiguration(RobotConstants.WRIST_ID, new CANTalonSRX.Configuration() {
         {
             selectedSensorSlotZero = FeedbackDevice.QuadEncoder;
             continuousCurrentLimit = 20;
             enableCurrentLimit = true;
             peakOutputForward = 0.6;
             peakOutputReverse = -0.75;
-            pidSlotOne = new CANTalonSRX.PIDSlotValues() {
+            pidSlotZero = new CANTalonSRX.PIDSlotValues() {
                 {
                     kP = 4.5;
                     kI = 0.005;
@@ -39,6 +39,7 @@ public class Wrist extends Subsystem {
     private WristSetpoint requestedSetpoint;
 
     private Wrist() {
+        wristMotor.setSelectedSensorPosition(0, 0, 0);
         //Prevents NPEs
         requestedSetpoint = WristSetpoint.STOW;
         wristSafetyTask.startPeriodic(0.01);
