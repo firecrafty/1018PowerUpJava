@@ -3,6 +3,7 @@ package com.pikerobodevils.robot.commands.claw;
 import com.pikerobodevils.robot.subsystems.Elevator;
 import com.pikerobodevils.robot.subsystems.IntakeRollers;
 import com.pikerobodevils.robot.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class EjectCubeManual extends Command {
@@ -15,9 +16,9 @@ public class EjectCubeManual extends Command {
     @Override
     protected void initialize() {
         double speed;
-        if(Wrist.getInstance().getRequestedSetpoint() == Wrist.WristSetpoint.HALF_OUT) {
+        if (Wrist.getInstance().getRequestedSetpoint() == Wrist.WristSetpoint.HALF_OUT) {
             speed = 0.52;
-        } else if(Elevator.getInstance().isAtBottom()) {
+        } else if (Elevator.getInstance().isAtBottom()) {
             speed = 1;
         } else {
             speed = 0.5;

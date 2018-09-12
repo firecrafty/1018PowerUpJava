@@ -1,14 +1,21 @@
 package com.pikerobodevils.robot;
 
+import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
+import com.pikerobodevils.robot.subsystems.Drivetrain;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
+
 public class Robot extends TimedRobot {
-    ControlBoard controlBoard = ControlBoard.getInstance();
+    ControlBoard controlBoard;
+    Drivetrain drivetrain;
+    DifferentialDriveJoystickMap mixer = new DifferentialDriveJoystickMap();
 
     @Override
     public void robotInit() {
-
+        controlBoard = ControlBoard.getInstance();
+        drivetrain = Drivetrain.getInstance();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.pikerobodevils.robot.subsystems;
 
 import com.pikerobodevils.robot.RobotConstants;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -14,28 +15,22 @@ public class IntakeGripper extends Subsystem {
         set(State.CLOSE);
     }
 
-    private void open() {
-        solenoid.set(DoubleSolenoid.Value.kForward);
-    }
-
-    private void close() {
-        solenoid.set(DoubleSolenoid.Value.kReverse);
-    }
-
     public void set(State state) {
         if (state == null) {
             throw new NullPointerException("State cannot be null");
         }
-        if (state == State.OPEN) {
-            open();
-        } else if (state == State.CLOSE) {
-            close();
-        }
+        solenoid.set(state.value);
     }
 
     public enum State {
-        OPEN,
-        CLOSE
+        OPEN(DoubleSolenoid.Value.kReverse),
+        CLOSE(DoubleSolenoid.Value.kForward);
+
+        public final DoubleSolenoid.Value value;
+
+        State(DoubleSolenoid.Value value) {
+            this.value = value;
+        }
     }
 
     @Override
@@ -43,9 +38,12 @@ public class IntakeGripper extends Subsystem {
 
     }
 
-    private static IntakeGripper mInstance = new IntakeGripper();
+    private static IntakeGripper mInstance;
 
     public static IntakeGripper getInstance() {
+        if (mInstance == null) {
+            mInstance = new IntakeGripper();
+        }
         return mInstance;
     }
 }

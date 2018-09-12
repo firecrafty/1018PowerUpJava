@@ -12,6 +12,7 @@ import com.pikerobodevils.robot.commands.wrist.WristSetAngleCommand;
 import com.pikerobodevils.robot.subsystems.Elevator;
 import com.pikerobodevils.robot.subsystems.IntakeGripper;
 import com.pikerobodevils.robot.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
@@ -42,8 +43,8 @@ public class ControlBoard {
     private static final int CLAW_OPEN_BUTTON = 10;
     private static final int CLAW_CLOSE_BUTTON = 11;
 
-    private Joystick leftStick = new Joystick(LEFT_STICK_PORT);
-    private Joystick rightStick = new Joystick(RIGHT_STICK_PORT);
+    public Joystick leftStick = new Joystick(LEFT_STICK_PORT);
+    public Joystick rightStick = new Joystick(RIGHT_STICK_PORT);
     private Joystick buttonPanel = new Joystick(BUTTON_PANEL_PORT);
 
     private JoystickButton switchButton = new JoystickButton(buttonPanel, SWITCH_BUTTON);
@@ -72,26 +73,40 @@ public class ControlBoard {
         registerCommands();
     }
 
+    /**
+     * Returns the throttle (forwards/backwards) value for the robot's motion.
+     *
+     * @return the throttle value
+     */
     public double getThrottle() {
-        return leftStick.getY();
+        //Y axis is inverted
+        return -leftStick.getY();
     }
 
+    /**
+     * Returns the turn (left/right) value for the robot's motion.
+     *
+     * @return the turn value
+     */
     public double getTurn() {
         return rightStick.getX();
     }
 
+    /**
+     * Registers all operator interface commands with the {@link edu.wpi.first.wpilibj.command.Scheduler}.
+     */
     private void registerCommands() {
-        Command switchCommand = new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SWITCH);
+        Command switchCommand = new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SWITCH, Wrist.WristSetpoint.HALF_OUT);
         switchButton.whenPressed(switchCommand);
         switchTwoButton.whenPressed(switchCommand);
-        scaleLowButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_LOW));
-        scaleMidButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_MID));
-        scaleHighButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_HIGH));
-        scaleLowTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_LOW_TWO));
-        scaleMidTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_MID_TWO));
-        scaleHighTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_HIGH_TWO));
+        scaleLowButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_LOW, Wrist.WristSetpoint.HALF_OUT));
+        scaleMidButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_MID, Wrist.WristSetpoint.HALF_OUT));
+        scaleHighButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_HIGH, Wrist.WristSetpoint.HALF_OUT));
+        scaleLowTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_LOW_TWO, Wrist.WristSetpoint.SCORE_INTAKE));
+        scaleMidTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_MID_TWO, Wrist.WristSetpoint.SCORE_INTAKE));
+        scaleHighTwoButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SCALE_HIGH_TWO, Wrist.WristSetpoint.SCORE_INTAKE));
         exchangeInButton.whenPressed(new SuperstructurePrepForIntakeCommand());
-        exchangeOutButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.EXCHANGE_PORTAL));
+        exchangeOutButton.whenPressed(new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.EXCHANGE_PORTAL, Wrist.WristSetpoint.SCORE_INTAKE));
         stowButton.whenPressed(new SuperstructureStowCommand());
         elevatorBumpUpButton.whenPressed(new ElevatorBumpUpCommand());
         elevatorBumpDownButton.whenPressed(new ElevatorBumpDownCommand());
@@ -99,14 +114,17 @@ public class ControlBoard {
         wristHalfOutButton.whenPressed(new WristSetAngleCommand(Wrist.WristSetpoint.HALF_OUT));
         wristStowButton.whenPressed(new WristSetAngleCommand(Wrist.WristSetpoint.STOW));
         rollersInButton.whileHeld(new IntakeCubeManual());
-        rollersOutButton.whenPressed(new EjectCubeManual());
+        rollersOutButton.whileHeld(new EjectCubeManual());
         clawOpenButton.whenPressed(new SetGripperCommand(IntakeGripper.State.OPEN));
         clawCloseButton.whenPressed(new SetGripperCommand(IntakeGripper.State.CLOSE));
     }
 
-    private static ControlBoard mInstance = new ControlBoard();
+    private static ControlBoard mInstance;
 
     public static ControlBoard getInstance() {
+        if (mInstance == null) {
+            mInstance = new ControlBoard();
+        }
         return mInstance;
     }
 

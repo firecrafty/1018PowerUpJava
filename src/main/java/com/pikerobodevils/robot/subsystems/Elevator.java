@@ -6,6 +6,7 @@ import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.util.MathUtils;
 import com.pikerobodevils.robot.RobotConstants;
 import com.pikerobodevils.robot.commands.elevator.ElevatorHoldCommand;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -31,8 +32,18 @@ public class Elevator extends Subsystem {
         }
     });
     private CANTalonSRX slave = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.ELEVATOR_SLAVE_ID, master);
+    /**
+     * Banner retroreflective infrared sensor for detecting bottom of elevator
+     */
     private DigitalInput bannerSensor = new DigitalInput(0);
+    /**
+     * Runs the background safety check for the elevator.
+     *
+     * @see Elevator#updateElevatorSafety()
+     */
     private Notifier elevatorSafetyTask = new Notifier(this::updateElevatorSafety);
+
+    private double openLoopPower = 0;
 
     private Elevator() {
         /*bannerSensor.setUpSourceEdge(false, true);
@@ -42,16 +53,27 @@ public class Elevator extends Subsystem {
                 master.setSelectedSensorPosition(0, 0, 0);
             }
         });*/
+        //Initialize the controller to MotionMagic mode so getClosedLoopTarget doesn't fail
+        //needs to happen before safety task starts
+        master.set(ControlMode.MotionMagic, ElevatorSetpoint.FLOOR.value);
         elevatorSafetyTask.startPeriodic(0.01);
     }
 
-    public void setOpenLoop(double speed) {
-        if(!allowOpenLoopDown()) {
-            MathUtils.coerceInRange(speed, 0, 1);
-        } else if(allowOpenLoopUp()) {
-            MathUtils.coerceInRange(speed, -1,0);
+    public double limitDirection(double speed) {
+        boolean allowUp = allowOpenLoopUp(), allowDown = allowOpenLoopDown();
+        if (allowUp && allowDown) {
+            return speed;
+        } else if (!allowUp) {
+            return MathUtils.coerceInRange(speed, -1, 0);
+        } else {
+            return MathUtils.coerceInRange(speed, 0, 1);
         }
-        if(speed == 0) {
+    }
+
+
+    public void setOpenLoop(double speed) {
+        openLoopPower = limitDirection(speed);
+        if (openLoopPower == 0) {
             resumeClosedLoop();
         }
         master.set(ControlMode.PercentOutput, speed);
@@ -66,12 +88,14 @@ public class Elevator extends Subsystem {
     }
 
     public void resumeClosedLoop() {
+        openLoopPower = 0;
         setClosedLoop(master.getSelectedSensorPosition(0));
     }
 
     public void bumpDown() {
         setClosedLoop(getClosedLoopTarget() - 500);
     }
+
     public void bumpUp() {
         setClosedLoop(getClosedLoopTarget() + 500);
     }
@@ -79,6 +103,7 @@ public class Elevator extends Subsystem {
     public void stop() {
         master.set(ControlMode.Disabled, 0);
     }
+
     /**
      * Checks whether elevator is at the bottom (stow) position
      *
@@ -108,21 +133,34 @@ public class Elevator extends Subsystem {
      */
     public boolean elevatorHeightWithinAvoidanceRange() {
         int height = getHeight();
-        return height <= 200 || height >= 3500;
+        return MathUtils.isInRange(height, 200, 3500);
     }
 
+    /**
+     * Returns true when the elevator height is within (+/-) 100 STUs of the current setpoint
+     *
+     * @return true if the elevator is in range; otherwise false.
+     */
     public boolean onTarget() {
         return MathUtils.isInRange(master.getClosedLoopError(0), -100, 100);
     }
 
+    /**
+     * Runs the elevator safety task
+     * <p><ul>
+     * <li>Resets the encoder if the retroreflective sensor detects that the frame is at the bottom
+     * <li>If the elevator is in open-loop mode, limits the direction of the elevator
+     * </ul>
+     *
+     * @see #setOpenLoop(double)
+     * @see #limitDirection(double)
+     */
     private void updateElevatorSafety() {
         if (isAtBottom()) {
             master.setSelectedSensorPosition(0, 0, 0);
         }
-        if(!allowOpenLoopDown() && master.getControlMode() == ControlMode.PercentOutput && master.getMotorOutputPercent() < 0) {
-            resumeClosedLoop();
-        } else if(allowOpenLoopUp() && master.getControlMode() == ControlMode.PercentOutput && master.getMotorOutputPercent() > 0) {
-            resumeClosedLoop();
+        if (master.getControlMode() == ControlMode.PercentOutput) {
+            setOpenLoop(openLoopPower);
         }
 
     }
@@ -158,9 +196,12 @@ public class Elevator extends Subsystem {
         }
     }
 
-    private static Elevator mInstance = new Elevator();
+    private static Elevator mInstance;
 
     public static Elevator getInstance() {
+        if (mInstance == null) {
+            mInstance = new Elevator();
+        }
         return mInstance;
     }
 

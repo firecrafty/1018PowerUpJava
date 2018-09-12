@@ -29,10 +29,10 @@ public class DifferentialDriveJoystickMap {
      * Limit motor values to the -1.0 to +1.0 range.
      */
     protected double limit(double value) {
-        if(value > 1.0) {
+        if (value > 1.0) {
             return 1.0;
         }
-        if(value < -1.0) {
+        if (value < -1.0) {
             return -1.0;
         }
         return value;
@@ -46,8 +46,8 @@ public class DifferentialDriveJoystickMap {
      * @param deadband range around zero
      */
     protected double applyDeadband(double value, double deadband) {
-        if(Math.abs(value) > deadband) {
-            if(value > 0.0) {
+        if (Math.abs(value) > deadband) {
+            if (value > 0.0) {
                 return (value - deadband) / (1.0 - deadband);
             } else {
                 return (value + deadband) / (1.0 - deadband);
@@ -62,22 +62,22 @@ public class DifferentialDriveJoystickMap {
      */
     protected void normalize(double[] wheelSpeeds) {
         double maxMagnitude = Math.abs(wheelSpeeds[0]);
-        for(int i = 1; i < wheelSpeeds.length; i++) {
+        for (int i = 1; i < wheelSpeeds.length; i++) {
             double temp = Math.abs(wheelSpeeds[i]);
-            if(maxMagnitude < temp) {
+            if (maxMagnitude < temp) {
                 maxMagnitude = temp;
             }
         }
-        if(maxMagnitude > 1.0) {
-            for(int i = 0; i < wheelSpeeds.length; i++) {
+        if (maxMagnitude > 1.0) {
+            for (int i = 0; i < wheelSpeeds.length; i++) {
                 wheelSpeeds[i] = wheelSpeeds[i] / maxMagnitude;
             }
         }
     }
 
     /**
-     * Arcade drive method for differential drive platform.
-     * The calculated values will be squared to decrease sensitivity at low speeds.
+     * Arcade drive method for differential drive platform. The calculated values will be squared to
+     * decrease sensitivity at low speeds.
      *
      * @param xSpeed    The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
      * @param zRotation The robot's rotation rate around the Z axis [-1.0..1.0]. Clockwise is
@@ -105,7 +105,7 @@ public class DifferentialDriveJoystickMap {
 
         // Square the inputs (while preserving the sign) to increase fine control
         // while permitting full power.
-        if(squaredInputs) {
+        if (squaredInputs) {
             xSpeed = Math.copySign(xSpeed * xSpeed, xSpeed);
             zRotation = Math.copySign(zRotation * zRotation, zRotation);
         }
@@ -115,9 +115,9 @@ public class DifferentialDriveJoystickMap {
 
         double maxInput = Math.copySign(Math.max(Math.abs(xSpeed), Math.abs(zRotation)), xSpeed);
 
-        if(xSpeed >= 0.0) {
+        if (xSpeed >= 0.0) {
             // First quadrant, else second quadrant
-            if(zRotation >= 0.0) {
+            if (zRotation >= 0.0) {
                 leftMotorOutput = maxInput;
                 rightMotorOutput = xSpeed - zRotation;
             } else {
@@ -126,7 +126,7 @@ public class DifferentialDriveJoystickMap {
             }
         } else {
             // Third quadrant, else fourth quadrant
-            if(zRotation >= 0.0) {
+            if (zRotation >= 0.0) {
                 leftMotorOutput = xSpeed + zRotation;
                 rightMotorOutput = maxInput;
             } else {
@@ -150,8 +150,7 @@ public class DifferentialDriveJoystickMap {
      * @param xSpeed      The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
      * @param zRotation   The robot's rotation rate around the Z axis [-1.0..1.0]. Clockwise is
      *                    positive.
-     * @param isQuickTurn If set, overrides constant-curvature turning for
-     *                    turn-in-place maneuvers.
+     * @param isQuickTurn If set, overrides constant-curvature turning for turn-in-place maneuvers.
      */
     public DriveSignal curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
 
@@ -164,8 +163,8 @@ public class DifferentialDriveJoystickMap {
         double angularPower;
         boolean overPower;
 
-        if(isQuickTurn) {
-            if(Math.abs(xSpeed) < m_quickStopThreshold) {
+        if (isQuickTurn) {
+            if (Math.abs(xSpeed) < m_quickStopThreshold) {
                 m_quickStopAccumulator = (1 - m_quickStopAlpha) * m_quickStopAccumulator
                         + m_quickStopAlpha * limit(zRotation) * 2;
             }
@@ -175,9 +174,9 @@ public class DifferentialDriveJoystickMap {
             overPower = false;
             angularPower = Math.abs(xSpeed) * zRotation - m_quickStopAccumulator;
 
-            if(m_quickStopAccumulator > 1) {
+            if (m_quickStopAccumulator > 1) {
                 m_quickStopAccumulator -= 1;
-            } else if(m_quickStopAccumulator < -1) {
+            } else if (m_quickStopAccumulator < -1) {
                 m_quickStopAccumulator += 1;
             } else {
                 m_quickStopAccumulator = 0.0;
@@ -188,17 +187,17 @@ public class DifferentialDriveJoystickMap {
         double rightMotorOutput = xSpeed - angularPower;
 
         // If rotation is overpowered, reduce both outputs to within acceptable range
-        if(overPower) {
-            if(leftMotorOutput > 1.0) {
+        if (overPower) {
+            if (leftMotorOutput > 1.0) {
                 rightMotorOutput -= leftMotorOutput - 1.0;
                 leftMotorOutput = 1.0;
-            } else if(rightMotorOutput > 1.0) {
+            } else if (rightMotorOutput > 1.0) {
                 leftMotorOutput -= rightMotorOutput - 1.0;
                 rightMotorOutput = 1.0;
-            } else if(leftMotorOutput < -1.0) {
+            } else if (leftMotorOutput < -1.0) {
                 rightMotorOutput -= leftMotorOutput + 1.0;
                 leftMotorOutput = -1.0;
-            } else if(rightMotorOutput < -1.0) {
+            } else if (rightMotorOutput < -1.0) {
                 leftMotorOutput -= rightMotorOutput + 1.0;
                 rightMotorOutput = -1.0;
             }
@@ -206,7 +205,7 @@ public class DifferentialDriveJoystickMap {
 
         // Normalize the wheel speeds
         double maxMagnitude = Math.max(Math.abs(leftMotorOutput), Math.abs(rightMotorOutput));
-        if(maxMagnitude > 1.0) {
+        if (maxMagnitude > 1.0) {
             leftMotorOutput /= maxMagnitude;
             rightMotorOutput /= maxMagnitude;
         }
@@ -218,8 +217,8 @@ public class DifferentialDriveJoystickMap {
     }
 
     /**
-     * Tank drive method for differential drive platform.
-     * The calculated values will be squared to decrease sensitivity at low speeds.
+     * Tank drive method for differential drive platform. The calculated values will be squared to
+     * decrease sensitivity at low speeds.
      *
      * @param leftSpeed  The robot's left side speed along the X axis [-1.0..1.0]. Forward is
      *                   positive.
@@ -249,7 +248,7 @@ public class DifferentialDriveJoystickMap {
 
         // Square the inputs (while preserving the sign) to increase fine control
         // while permitting full power.
-        if(squaredInputs) {
+        if (squaredInputs) {
             leftSpeed = Math.copySign(leftSpeed * leftSpeed, leftSpeed);
             rightSpeed = Math.copySign(rightSpeed * rightSpeed, rightSpeed);
         }
@@ -265,8 +264,8 @@ public class DifferentialDriveJoystickMap {
      * <p>
      * <p>While QuickTurn is enabled, the QuickStop accumulator takes on the rotation rate value
      * outputted by the low-pass filter when the robot's speed along the X axis is below the
-     * threshold. When QuickTurn is disabled, the accumulator's value is applied against the computed
-     * angular power request to slow the robot's rotation.
+     * threshold. When QuickTurn is disabled, the accumulator's value is applied against the
+     * computed angular power request to slow the robot's rotation.
      *
      * @param threshold X speed below which quick stop accumulator will receive rotation rate values
      *                  [0..1.0].

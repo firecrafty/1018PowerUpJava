@@ -3,6 +3,7 @@ package com.pikerobodevils.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.robot.RobotConstants;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -13,6 +14,7 @@ public class IntakeRollers extends Subsystem {
         {
             continuousCurrentLimit = 20;
             enableCurrentLimit = true;
+            invert = true;
         }
     });
     CANTalonSRX intakeSlave = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.INTAKE_SLAVE_ID, intakeMaster);
@@ -35,9 +37,12 @@ public class IntakeRollers extends Subsystem {
 
     }
 
-    private static IntakeRollers mInstance = new IntakeRollers();
+    private static IntakeRollers mInstance;
 
     public static IntakeRollers getInstance() {
+        if (mInstance == null) {
+            mInstance = new IntakeRollers();
+        }
         return mInstance;
     }
 }

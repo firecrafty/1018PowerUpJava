@@ -1,16 +1,24 @@
 package com.pikerobodevils.lib.drivers;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motion.MotionProfileStatus;
-import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Notifier;
+
+import edu.wpi.first.wpilibj.SpeedController;
 
 /**
  * @author Ryan Blue
  */
-public class CANTalonSRX extends TalonSRX {
+public class CANTalonSRX extends TalonSRX implements SpeedController {
     private double mLastSetValue = Double.NaN;
 
     public CANTalonSRX(int deviceNumber) {
@@ -35,7 +43,9 @@ public class CANTalonSRX extends TalonSRX {
     }
 
     public static class Configuration {
-        public Configuration(){}
+        public Configuration() {
+        }
+
         public boolean invert = false;
         public double openLoopRampRate = 0;
         public double closedLoopRampRate = 0;
@@ -202,9 +212,33 @@ public class CANTalonSRX extends TalonSRX {
 
     @Override
     public void set(ControlMode mode, double outputValue) {
-        if(outputValue != mLastSetValue || mode != getControlMode()) {
+        if (outputValue != mLastSetValue || mode != getControlMode()) {
             super.set(mode, outputValue);
         }
     }
 
+    @Override
+    public void set(double speed) {
+        set(ControlMode.PercentOutput, speed);
+    }
+
+    @Override
+    public double get() {
+        return getMotorOutputPercent();
+    }
+
+    @Override
+    public void disable() {
+        stopMotor();
+    }
+
+    @Override
+    public void stopMotor() {
+        set(ControlMode.Disabled, 0);
+    }
+
+    @Override
+    public void pidWrite(double output) {
+        System.out.println("why would you do this");
+    }
 }

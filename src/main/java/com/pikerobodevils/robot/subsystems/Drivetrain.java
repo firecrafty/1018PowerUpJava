@@ -2,6 +2,7 @@ package com.pikerobodevils.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.motion.DrivetrainProfile;
@@ -9,6 +10,7 @@ import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
 import com.pikerobodevils.lib.util.drive.DriveSignal;
 import com.pikerobodevils.robot.RobotConstants;
 import com.pikerobodevils.robot.commands.drivetrain.TeleopDrive;
+
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -16,6 +18,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author Ryan Blue
  */
 public class Drivetrain extends Subsystem {
+
+
     CANTalonSRX.Configuration masterConfig = new CANTalonSRX.Configuration() {
         {
             continuousCurrentLimit = 18;
@@ -37,9 +41,17 @@ public class Drivetrain extends Subsystem {
     private DifferentialDriveJoystickMap driveHelper = new DifferentialDriveJoystickMap();
 
     private Drivetrain() {
+        //So for some reason wpilib thought it was a good idea to invert during joystick mapping...
+        //But we have to invert these so closed loop works...
         rightMaster.setInverted(true);
         rightSlaveA.setInverted(true);
         rightSlaveB.setInverted(true);
+        leftMaster.setNeutralMode(NeutralMode.Coast);
+        leftSlaveA.setNeutralMode(NeutralMode.Coast);
+        leftSlaveB.setNeutralMode(NeutralMode.Coast);
+        rightMaster.setNeutralMode(NeutralMode.Coast);
+        rightSlaveA.setNeutralMode(NeutralMode.Coast);
+        rightSlaveB.setNeutralMode(NeutralMode.Coast);
     }
 
     public void drive(double xSpeed, double zRotation) {
@@ -50,16 +62,20 @@ public class Drivetrain extends Subsystem {
     public void setOpenLoop(DriveSignal signal) {
         //setControlMode(DrivetrainControlMode.OPEN_LOOP);
         leftMaster.set(ControlMode.PercentOutput, signal.left);
-        rightMaster.set(ControlMode.PercentOutput, signal.right);
+        //So we have to do this...
+        rightMaster.set(ControlMode.PercentOutput, -signal.right);
     }
 
     public void loadMotionProfile(DrivetrainProfile profile) {
 
     }
 
-    public static Drivetrain mInstance = new Drivetrain();
+    private static Drivetrain mInstance;
 
     public static Drivetrain getInstance() {
+        if (mInstance == null) {
+            mInstance = new Drivetrain();
+        }
         return mInstance;
     }
 
@@ -70,6 +86,7 @@ public class Drivetrain extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
+        //not sure why this isn't working
         setDefaultCommand(new TeleopDrive());
     }
 }

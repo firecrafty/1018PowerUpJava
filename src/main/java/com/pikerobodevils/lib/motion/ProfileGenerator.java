@@ -3,13 +3,15 @@ package com.pikerobodevils.lib.motion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pikerobodevils.lib.util.HashGeneratorUtils;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.File;
+
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.io.File;
 
 public class ProfileGenerator {
     private static final String cacheFolder = "./PATHS/";
