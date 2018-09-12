@@ -133,7 +133,7 @@ public class Elevator extends Subsystem {
      */
     public boolean elevatorHeightWithinAvoidanceRange() {
         int height = getHeight();
-        return height <= 200 || height >= 3500;
+        return MathUtils.isInRange(height, 200, 3500);
     }
 
     /**
