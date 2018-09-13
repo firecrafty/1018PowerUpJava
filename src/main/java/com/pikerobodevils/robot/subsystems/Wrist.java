@@ -39,10 +39,10 @@ public class Wrist extends Subsystem {
     private WristSetpoint requestedSetpoint;
 
     private Wrist() {
+        super();
         wristMotor.setSelectedSensorPosition(0, 0, 0);
         //Prevents NPEs
         requestedSetpoint = WristSetpoint.STOW;
-        wristSafetyTask.startPeriodic(0.01);
     }
 
     private int prevElevatorTarget;
@@ -65,6 +65,11 @@ public class Wrist extends Subsystem {
 
     public boolean onTarget() {
         return MathUtils.isInRange(wristMotor.getClosedLoopError(0), -100, 100);
+    }
+
+    @Override
+    public void periodic() {
+        updateWristTick();
     }
 
     private void updateWristTick() {
@@ -111,7 +116,13 @@ public class Wrist extends Subsystem {
 
         private int getScoreAngle() {
             //floorEntry includes search value, lowerEntry excludes
-            return lookup.floorEntry(Elevator.getInstance().getClosedLoopTarget()).getValue();
+            // If the elevator is open looping, don't use the closed loop target as that throws errors.
+            if (Elevator.getInstance().isOpenLoop()) {
+                return lookup.floorEntry(Elevator.getInstance().getHeight()).getValue();
+            } else {
+                //Otherwise use it so we don't floop the wrist around like a sack of potatoes
+                return lookup.floorEntry(Elevator.getInstance().getClosedLoopTarget()).getValue();
+            }
         }
     }
 

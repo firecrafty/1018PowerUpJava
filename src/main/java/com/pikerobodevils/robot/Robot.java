@@ -1,6 +1,5 @@
 package com.pikerobodevils.robot;
 
-import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
 import com.pikerobodevils.robot.subsystems.Drivetrain;
 
 import org.pmw.tinylog.Logger;
@@ -14,7 +13,6 @@ public class Robot extends TimedRobot {
 
     ControlBoard controlBoard;
     Drivetrain drivetrain;
-    DifferentialDriveJoystickMap mixer = new DifferentialDriveJoystickMap();
 
     @Override
     public void robotInit() {
@@ -27,6 +25,7 @@ public class Robot extends TimedRobot {
                 e.printStackTrace();
             }
         }
+        setPeriod(0.01);
         controlBoard = ControlBoard.getInstance();
         drivetrain = Drivetrain.getInstance();
         RobotLogger.logRobotInit();
@@ -52,6 +51,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+        Scheduler.getInstance().run();
     }
 
     @Override

@@ -12,6 +12,7 @@ public class IntakeGripper extends Subsystem {
     private State state = State.CLOSE;
 
     private IntakeGripper() {
+        super();
         set(State.CLOSE);
     }
 

@@ -6,8 +6,6 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Hash functions utility class.
- *
- * @author www.codejava.net
  */
 public class HashGeneratorUtils {
     private HashGeneratorUtils() {
