@@ -42,7 +42,7 @@ public class RobotLogger {
     }
 
     public static void logRobotInit() {
-        Logger.info("Robot initialized!");
+        Logger.info("Robot initialized! Ready!");
     }
 
 }
