@@ -20,8 +20,9 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         RobotLogger.logRobotInit();
         while (DriverStation.getInstance().isDSAttached()) {
+            Logger.warn("Waiting for DS connection...");
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
