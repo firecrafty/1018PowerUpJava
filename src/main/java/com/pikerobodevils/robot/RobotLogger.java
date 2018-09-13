@@ -37,6 +37,7 @@ public class RobotLogger {
                 .writer(fileWriter, Level.TRACE)
                 .writer(consoleWriter, Level.INFO)
                 .maxStackTraceElements(-1)
+                .formatPattern("{date} [{thread}] {level} {class}.{method}(): {message}")
                 .activate();
     }
 
