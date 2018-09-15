@@ -8,9 +8,8 @@ import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
 import com.pikerobodevils.lib.util.drive.DriveSignal;
 import com.pikerobodevils.robot.RobotConstants;
+import com.pikerobodevils.robot.RobotLogger;
 import com.pikerobodevils.robot.commands.drivetrain.TeleopDrive;
-
-import org.pmw.tinylog.Logger;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -43,7 +42,7 @@ public class Drivetrain extends Subsystem {
 
     private Drivetrain() {
         super();
-        Logger.debug("Configuring Drivetrain hardware...");
+        RobotLogger.logSubsystemConstructionStart(this);
         rightSlaveA = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_A_ID, rightMaster);
         rightSlaveB = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_B_ID, rightMaster);
         leftMaster = CANTalonSRX.fromConfiguration(RobotConstants.LEFT_MASTER_ID, masterConfig);
@@ -62,7 +61,7 @@ public class Drivetrain extends Subsystem {
         rightSlaveA.setNeutralMode(NeutralMode.Coast);
         rightSlaveB.setNeutralMode(NeutralMode.Coast);
         navX = new AHRS(SPI.Port.kMXP);
-        Logger.debug("Drivetrain hardware configured!");
+        RobotLogger.logSubsystemConstructionStart(this);
     }
 
     public void drive(double xSpeed, double zRotation) {

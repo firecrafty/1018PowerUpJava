@@ -3,6 +3,7 @@ package com.pikerobodevils.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.robot.RobotConstants;
+import com.pikerobodevils.robot.RobotLogger;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -10,18 +11,22 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author Ryan Blue
  */
 public class IntakeRollers extends Subsystem {
-    CANTalonSRX intakeMaster = CANTalonSRX.fromConfiguration(RobotConstants.INTAKE_MASTER_ID, new CANTalonSRX.Configuration() {
-        {
-            continuousCurrentLimit = 20;
-            enableCurrentLimit = true;
-            invert = true;
-        }
-    });
-    CANTalonSRX intakeSlave = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.INTAKE_SLAVE_ID, intakeMaster);
+    private CANTalonSRX intakeMaster;
+    private CANTalonSRX intakeSlave;
 
 
     private IntakeRollers() {
         super();
+        RobotLogger.logSubsystemConstructionStart(this);
+        intakeMaster = CANTalonSRX.fromConfiguration(RobotConstants.INTAKE_MASTER_ID, new CANTalonSRX.Configuration() {
+            {
+                continuousCurrentLimit = 20;
+                enableCurrentLimit = true;
+                invert = true;
+            }
+        });
+        intakeSlave = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.INTAKE_SLAVE_ID, intakeMaster);
+        RobotLogger.logSubsystemConstructionFinish(this);
     }
 
     public void set(double speed) {
