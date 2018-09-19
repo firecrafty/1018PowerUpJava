@@ -5,6 +5,7 @@ import com.pikerobodevils.robot.subsystems.Drivetrain;
 
 import org.pmw.tinylog.Logger;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -29,6 +30,7 @@ public class Robot extends TimedRobot {
         setPeriod(0.01);
         controlBoard = ControlBoard.getInstance();
         RobotLogger.logRobotInitComplete();
+        CameraServer.getInstance().startAutomaticCapture();
     }
 
     @Override
