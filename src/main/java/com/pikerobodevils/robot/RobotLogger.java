@@ -22,11 +22,11 @@ public class RobotLogger {
     static {
         int logNumber;
         if (Preferences.getInstance().containsKey("prevLogNumber")) {
-            logNumber = 0;
-            Preferences.getInstance().putInt("prevLogNumber", 0);
-        } else {
             logNumber = Preferences.getInstance().getInt("prevLogNumber", 0) + 1;
             Preferences.getInstance().putInt("prevLogNumber", logNumber);
+        } else {
+            logNumber = 0;
+            Preferences.getInstance().putInt("prevLogNumber", 0);
         }
 
         File logDir = new File("/c/logs/");
