@@ -19,10 +19,10 @@ public class ProfileGenerator {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     public static DrivetrainProfile getDrivetrainProfile(ProfileSettings profile) {
-        return new DrivetrainProfile(getProfile(profile));
+        return new DrivetrainProfile(getPathfinderProfile(profile));
     }
 
-    public static Pair<Trajectory, Trajectory> getProfile(ProfileSettings profile) {
+    public static Pair<Trajectory, Trajectory> getPathfinderProfile(ProfileSettings profile) {
         String serialized;
         try {
             serialized = objectMapper.writeValueAsString(profile);

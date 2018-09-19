@@ -10,7 +10,10 @@ public class TestUtils {
         assertEquals(expected.length(), actual.length());
         for (int i = 0; i < expected.length(); i++) {
             //assertEquals does not work since Trajectory.equals() takes a Segment rather than an object, thus not overriding Object.equals()
-            assertTrue(expected.get(i).equals(actual.get(i)));
+            assertSegmentEquals(expected.get(i), actual.get(i));
         }
+    }
+    public static void assertSegmentEquals(Trajectory.Segment expected, Trajectory.Segment actual) {
+        assertTrue(expected.equals(actual));
     }
 }
