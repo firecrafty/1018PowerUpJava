@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.util.MathUtils;
 import com.pikerobodevils.robot.RobotConstants;
+import com.pikerobodevils.robot.RobotLogger;
 import com.pikerobodevils.robot.commands.elevator.ElevatorHoldCommand;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -15,31 +16,36 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Elevator extends Subsystem {
 
-    private CANTalonSRX master = CANTalonSRX.fromConfiguration(RobotConstants.ELEVATOR_MASTER_ID, new CANTalonSRX.Configuration() {
-        {
-            selectedSensorSlotZero = FeedbackDevice.QuadEncoder;
-            peakOutputForward = 1;
-            peakOutputReverse = -0.6;
-            motionAcceleration = 4000;
-            motionCruiseVelocity = 560;
-            pidSlotZero = new CANTalonSRX.PIDSlotValues() {
-                {
-                    kP = 6;
-                    kF = 1023 / 560;
-                }
-            };
-        }
-    });
-    private CANTalonSRX slave = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.ELEVATOR_SLAVE_ID, master);
+    private CANTalonSRX master;
+    private CANTalonSRX slave;
     /**
      * Banner retroreflective infrared sensor for detecting bottom of elevator
      */
-    private DigitalInput bannerSensor = new DigitalInput(0);
+    private DigitalInput bannerSensor;
 
     private double openLoopPower = 0;
 
     private Elevator() {
         super();
+        RobotLogger.logSubsystemConstructionStart(this);
+
+        master = CANTalonSRX.fromConfiguration(RobotConstants.ELEVATOR_MASTER_ID, new CANTalonSRX.Configuration() {
+            {
+                selectedSensorSlotZero = FeedbackDevice.QuadEncoder;
+                peakOutputForward = 1;
+                peakOutputReverse = -0.6;
+                motionAcceleration = 4000;
+                motionCruiseVelocity = 560;
+                pidSlotZero = new CANTalonSRX.PIDSlotValues() {
+                    {
+                        kP = 6;
+                        kF = 1023 / 560;
+                    }
+                };
+            }
+        });
+        slave = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.ELEVATOR_SLAVE_ID, master);
+        bannerSensor = new DigitalInput(0);
         /*bannerSensor.setUpSourceEdge(false, true);
         bannerSensor.requestInterrupts(new InterruptHandlerFunction<Object>() {
             @Override
@@ -50,6 +56,7 @@ public class Elevator extends Subsystem {
         //Initialize the controller to MotionMagic mode so getClosedLoopTarget doesn't fail
         //needs to happen before safety task starts
         master.set(ControlMode.MotionMagic, ElevatorSetpoint.FLOOR.value);
+        RobotLogger.logSubsystemConstructionFinish(this);
     }
 
     public double limitDirection(double speed) {

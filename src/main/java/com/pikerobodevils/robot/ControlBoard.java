@@ -15,6 +15,8 @@ import com.pikerobodevils.robot.subsystems.Elevator;
 import com.pikerobodevils.robot.subsystems.IntakeGripper;
 import com.pikerobodevils.robot.subsystems.Wrist;
 
+import org.pmw.tinylog.Logger;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
@@ -73,6 +75,7 @@ public class ControlBoard {
 
     private ControlBoard() {
         registerCommands();
+        Logger.debug("Driver controls created!");
     }
 
     /**
@@ -98,6 +101,7 @@ public class ControlBoard {
      * Registers all operator interface commands with the {@link edu.wpi.first.wpilibj.command.Scheduler}.
      */
     private void registerCommands() {
+        Logger.debug("Registering commands...");
         Command switchCommand = new SuperstructureSetScoreHeightCommand(Elevator.ElevatorSetpoint.SWITCH, Wrist.WristSetpoint.HALF_OUT);
         switchButton.whenPressed(switchCommand);
         switchTwoButton.whenPressed(switchCommand);
@@ -121,6 +125,7 @@ public class ControlBoard {
         rollersOutButton.whileHeld(new EjectCubeManual());
         clawOpenButton.whenPressed(new SetGripperCommand(IntakeGripper.State.OPEN));
         clawCloseButton.whenPressed(new SetGripperCommand(IntakeGripper.State.CLOSE));
+        Logger.debug("Command registration complete!");
     }
 
     private static ControlBoard mInstance;

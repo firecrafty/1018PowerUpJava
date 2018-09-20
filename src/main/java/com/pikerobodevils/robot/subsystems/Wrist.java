@@ -5,10 +5,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.util.MathUtils;
 import com.pikerobodevils.robot.RobotConstants;
+import com.pikerobodevils.robot.RobotLogger;
 
 import java.util.TreeMap;
 
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -16,36 +16,36 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Wrist extends Subsystem {
 
-    public CANTalonSRX wristMotor = CANTalonSRX.fromConfiguration(RobotConstants.WRIST_ID, new CANTalonSRX.Configuration() {
-        {
-            selectedSensorSlotZero = FeedbackDevice.QuadEncoder;
-            continuousCurrentLimit = 20;
-            enableCurrentLimit = true;
-            peakOutputForward = 0.6;
-            peakOutputReverse = -0.75;
-            pidSlotZero = new CANTalonSRX.PIDSlotValues() {
-                {
-                    kP = 4.5;
-                    kI = 0.005;
-                    kD = 1.5;
-                    kF = 0;
-                    integralZone = 50;
-                }
-            };
-        }
-    });
-    Notifier wristSafetyTask = new Notifier(this::updateWristTick);
+    private CANTalonSRX wristMotor;
 
     private WristSetpoint requestedSetpoint;
 
     private Wrist() {
         super();
+        RobotLogger.logSubsystemConstructionStart(this);
+        wristMotor = CANTalonSRX.fromConfiguration(RobotConstants.WRIST_ID, new CANTalonSRX.Configuration() {
+            {
+                selectedSensorSlotZero = FeedbackDevice.QuadEncoder;
+                continuousCurrentLimit = 20;
+                enableCurrentLimit = true;
+                peakOutputForward = 0.6;
+                peakOutputReverse = -0.75;
+                pidSlotZero = new CANTalonSRX.PIDSlotValues() {
+                    {
+                        kP = 4.5;
+                        kI = 0.005;
+                        kD = 1.5;
+                        kF = 0;
+                        integralZone = 50;
+                    }
+                };
+            }
+        });
         wristMotor.setSelectedSensorPosition(0, 0, 0);
         //Prevents NPEs
         requestedSetpoint = WristSetpoint.STOW;
+        RobotLogger.logSubsystemConstructionFinish(this);
     }
-
-    private int prevElevatorTarget;
 
     public void request(WristSetpoint setpoint) {
         requestedSetpoint = setpoint;

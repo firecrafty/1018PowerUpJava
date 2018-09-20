@@ -8,6 +8,7 @@ import com.pikerobodevils.lib.drivers.CANTalonSRX;
 import com.pikerobodevils.lib.util.drive.DifferentialDriveJoystickMap;
 import com.pikerobodevils.lib.util.drive.DriveSignal;
 import com.pikerobodevils.robot.RobotConstants;
+import com.pikerobodevils.robot.RobotLogger;
 import com.pikerobodevils.robot.commands.drivetrain.TeleopDrive;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -29,20 +30,27 @@ public class Drivetrain extends Subsystem {
         }
     };
 
-    private CANTalonSRX leftMaster = CANTalonSRX.fromConfiguration(RobotConstants.LEFT_MASTER_ID, masterConfig);
+    private CANTalonSRX leftMaster;
 
-    private CANTalonSRX leftSlaveA = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.LEFT_SLAVE_A_ID, leftMaster);
-    private CANTalonSRX leftSlaveB = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.LEFT_SLAVE_B_ID, leftMaster);
-    private CANTalonSRX rightMaster = CANTalonSRX.fromConfiguration(RobotConstants.RIGHT_MASTER_ID, masterConfig);
-    private CANTalonSRX rightSlaveA = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_A_ID, rightMaster);
-    private CANTalonSRX rightSlaveB = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_B_ID, rightMaster);
-    private AHRS navX = new AHRS(SPI.Port.kMXP);
+    private CANTalonSRX leftSlaveA;
+    private CANTalonSRX leftSlaveB;
+    private CANTalonSRX rightMaster;
+    private CANTalonSRX rightSlaveA;
+    private CANTalonSRX rightSlaveB;
+    private AHRS navX;
     private DifferentialDriveJoystickMap driveHelper = new DifferentialDriveJoystickMap();
 
     private Drivetrain() {
         super();
+        RobotLogger.logSubsystemConstructionStart(this);
+        rightSlaveA = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_A_ID, rightMaster);
+        rightSlaveB = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.RIGHT_SLAVE_B_ID, rightMaster);
+        leftMaster = CANTalonSRX.fromConfiguration(RobotConstants.LEFT_MASTER_ID, masterConfig);
+        leftSlaveA = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.LEFT_SLAVE_A_ID, leftMaster);
+        leftSlaveB = CANTalonSRX.newPermanentSlaveTalon(RobotConstants.LEFT_SLAVE_B_ID, leftMaster);
         //So for some reason wpilib thought it was a good idea to invert during joystick mapping...
         //But we have to invert these so closed loop works...
+        rightMaster = CANTalonSRX.fromConfiguration(RobotConstants.RIGHT_MASTER_ID, masterConfig);
         rightMaster.setInverted(true);
         rightSlaveA.setInverted(true);
         rightSlaveB.setInverted(true);
@@ -52,6 +60,8 @@ public class Drivetrain extends Subsystem {
         rightMaster.setNeutralMode(NeutralMode.Coast);
         rightSlaveA.setNeutralMode(NeutralMode.Coast);
         rightSlaveB.setNeutralMode(NeutralMode.Coast);
+        navX = new AHRS(SPI.Port.kMXP);
+        RobotLogger.logSubsystemConstructionStart(this);
     }
 
     public void drive(double xSpeed, double zRotation) {

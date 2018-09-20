@@ -7,12 +7,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class IntakeGripper extends Subsystem {
 
-    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotConstants.INTAKE_SOLENOID_FWD, RobotConstants.INTAKE_SOLENOID_REV);
+    private DoubleSolenoid solenoid;
 
     private State state = State.CLOSE;
 
     private IntakeGripper() {
         super();
+        solenoid = new DoubleSolenoid(RobotConstants.INTAKE_SOLENOID_FWD, RobotConstants.INTAKE_SOLENOID_REV);
         set(State.CLOSE);
     }
 
