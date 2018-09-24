@@ -1,7 +1,5 @@
 package com.pikerobodevils.robot;
 
-import com.pikerobodevils.robot.subsystems.Drivetrain;
-
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -9,13 +7,11 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class Robot extends TimedRobot {
     ControlBoard controlBoard;
-    Drivetrain drivetrain;
 
     @Override
     public void robotInit() {
         setPeriod(0.01);
         controlBoard = ControlBoard.getInstance();
-        drivetrain = Drivetrain.getInstance();
         CameraServer.getInstance().startAutomaticCapture();
     }
 
