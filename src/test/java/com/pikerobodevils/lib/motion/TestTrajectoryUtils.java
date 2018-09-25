@@ -1,7 +1,8 @@
 package com.pikerobodevils.lib.motion;
 
-import jaci.pathfinder.Trajectory;
 import org.junit.jupiter.api.Test;
+
+import jaci.pathfinder.Trajectory;
 
 import static com.pikerobodevils.lib.test.TestUtils.assertTrajectoryEquals;
 import static jaci.pathfinder.Pathfinder.d2r;

@@ -1,6 +1,7 @@
 package com.pikerobodevils.lib.drivers;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -13,9 +14,12 @@ import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.Notifier;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SpeedController;
+import jaci.pathfinder.Trajectory;
+
+import static com.pikerobodevils.lib.motion.PathfinderUtils.pathfinderSegmentToTalonPoint;
 
 /**
  * @author Ryan Blue
@@ -198,15 +202,21 @@ public class CANTalonSRX extends TalonSRX implements SpeedController {
     private Notifier motionProfileLooper = new Notifier(this::handleMotionProfileSafety);
 
     private void handleMotionProfileSafety() {
-        //TODO: implement pushing points and auto-stop
+        MotionProfileStatus status = getMotionProfileStatus();
+        if (status.topBufferCnt > 0) {
+            processMotionProfileBuffer();
+        } else if (status.topBufferCnt == 0) {
+            motionProfileLooper.stop();
+        }
+
     }
 
     @Override
     public ErrorCode pushMotionProfileTrajectory(TrajectoryPoint trajPt) {
-        if(!isLooperRunning) {
-            looperPeriod = trajPt.timeDur.value/2000d;
+        if (!isLooperRunning) {
+            looperPeriod = trajPt.timeDur.value / 2000d;
         } else {
-            looperPeriod = Math.max(trajPt.timeDur.value/2000d, looperPeriod);
+            looperPeriod = Math.min(trajPt.timeDur.value / 2000d, looperPeriod);
         }
         motionProfileLooper.startPeriodic(looperPeriod);
         return super.pushMotionProfileTrajectory(trajPt);
@@ -242,5 +252,35 @@ public class CANTalonSRX extends TalonSRX implements SpeedController {
     @Override
     public void pidWrite(double output) {
         System.out.println("why would you do this");
+    }
+
+    public MotionProfileStatus getMotionProfileStatus() {
+        MotionProfileStatus statusToFill = new MotionProfileStatus();
+        getMotionProfileStatus(statusToFill);
+        return statusToFill;
+    }
+
+    public int motionProfileTotalCnt() {
+        MotionProfileStatus status = getMotionProfileStatus();
+        return status.topBufferCnt + status.btmBufferCnt;
+    }
+
+    public boolean isProfileComplete() {
+        return motionProfileTotalCnt() == 0;
+    }
+
+    public void resetMotionProfile() {
+        motionProfileLooper.stop();
+        looperPeriod = 0;
+        disable();
+        clearMotionProfileTrajectories();
+    }
+
+    public void loadMotionProfile(Trajectory trajectory) {
+        resetMotionProfile();
+        for (Trajectory.Segment segment : trajectory.segments) {
+            pushMotionProfileTrajectory(pathfinderSegmentToTalonPoint(segment));
+        }
+
     }
 }

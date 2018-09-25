@@ -1,5 +1,6 @@
 package com.pikerobodevils.robot.subsystems;
 
+import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -40,6 +41,7 @@ public class Drivetrain extends Subsystem {
     private AHRS navX = new AHRS(SPI.Port.kMXP);
     private DifferentialDriveJoystickMap driveHelper = new DifferentialDriveJoystickMap();
 
+
     private Drivetrain() {
         super();
         //So for some reason wpilib thought it was a good idea to invert during joystick mapping...
@@ -68,7 +70,37 @@ public class Drivetrain extends Subsystem {
     }
 
     public void loadMotionProfile(DrivetrainProfile profile) {
+        leftMaster.loadMotionProfile(profile.getLeft());
+        rightMaster.loadMotionProfile(profile.getRight());
 
+        /**while (leftMaster.getMotionProfileStatus().btmBufferCnt < (profile.getLeft().length()/8) && rightMaster.getMotionProfileStatus().btmBufferCnt < (profile.getRight().length()/8)) {
+         leftMaster.processMotionProfileBuffer();
+         rightMaster.processMotionProfileBuffer();
+         }*/
+    }
+
+    public void startMotionProfile() {
+        leftMaster.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+        rightMaster.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+    }
+
+    public void holdMotionProfile() {
+        leftMaster.set(ControlMode.MotionProfile, SetValueMotionProfile.Hold.value);
+        rightMaster.set(ControlMode.MotionProfile, SetValueMotionProfile.Hold.value);
+    }
+
+    public void resetMotionProfile() {
+        leftMaster.resetMotionProfile();
+        rightMaster.resetMotionProfile();
+    }
+
+    public void disable() {
+        leftMaster.disable();
+        rightMaster.disable();
+    }
+
+    public boolean isProfileComplete() {
+        return leftMaster.isProfileComplete() && rightMaster.isProfileComplete();
     }
 
     private static Drivetrain mInstance;

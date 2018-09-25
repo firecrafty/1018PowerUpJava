@@ -1,7 +1,8 @@
 package com.pikerobodevils.lib.motion;
 
-import jaci.pathfinder.Trajectory;
 import org.apache.commons.lang3.tuple.Pair;
+
+import jaci.pathfinder.Trajectory;
 
 public class DrivetrainProfile {
     private Pair<Trajectory, Trajectory> path;

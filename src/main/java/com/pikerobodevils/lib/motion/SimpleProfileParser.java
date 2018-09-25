@@ -41,7 +41,7 @@ public class SimpleProfileParser {
 
 
     public static Trajectory parseProfileCsv(String fileName) {
-        BufferedReader br = null;
+        BufferedReader br;
         String line;
         List<Trajectory.Segment> list = new ArrayList<>();
         try {
