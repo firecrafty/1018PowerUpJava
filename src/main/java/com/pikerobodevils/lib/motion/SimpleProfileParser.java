@@ -62,6 +62,7 @@ public class SimpleProfileParser {
         double dt = Double.parseDouble(segmentPoints[2]) / 1000;
         double position = Double.parseDouble(segmentPoints[0]);
         double velocity = Double.parseDouble(segmentPoints[1]);
+        System.out.println(dt + "," + position + "," + velocity);
         return new Trajectory.Segment(dt, 0, 0, position, velocity, 0, 0, 0);
     }
 

@@ -25,6 +25,7 @@ public class PathfinderUtils {
         point.position = segment.position;
         point.velocity = segment.velocity;
         point.headingDeg = segment.heading;
+        System.out.println("TRAJECTORY " + point.timeDur.value + ", " + point.position + ", " + point.velocity);
         return point;
     }
 

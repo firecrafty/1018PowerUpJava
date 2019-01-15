@@ -12,8 +12,11 @@ import com.pikerobodevils.lib.util.drive.DriveSignal;
 import com.pikerobodevils.robot.RobotConstants;
 import com.pikerobodevils.robot.commands.drivetrain.TeleopDrive;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import jaci.pathfinder.Trajectory;
 
 /**
  * @author Ryan Blue
@@ -41,6 +44,7 @@ public class Drivetrain extends Subsystem {
     private AHRS navX = new AHRS(SPI.Port.kMXP);
     private DifferentialDriveJoystickMap driveHelper = new DifferentialDriveJoystickMap();
 
+    private DrivetrainProfile currentProfile;
 
     private Drivetrain() {
         super();
@@ -92,6 +96,7 @@ public class Drivetrain extends Subsystem {
     public void resetMotionProfile() {
         leftMaster.resetMotionProfile();
         rightMaster.resetMotionProfile();
+        currentProfile = new DrivetrainProfile(Pair.of(new Trajectory(0), new Trajectory(0)));
     }
 
     public void disable() {
@@ -99,8 +104,19 @@ public class Drivetrain extends Subsystem {
         rightMaster.disable();
     }
 
+    public int pointsRemaining() {
+        return leftMaster.motionProfileTotalCnt();
+    }
+
     public boolean isProfileComplete() {
         return leftMaster.isProfileComplete() && rightMaster.isProfileComplete();
+    }
+
+    public double getProfilePercentComplete() {
+        if(currentProfile.length() == 0) {
+            return 0;
+        }
+        return (1 - (double)(pointsRemaining() / currentProfile.length())) * 100;
     }
 
     private static Drivetrain mInstance;

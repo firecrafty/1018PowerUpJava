@@ -20,18 +20,19 @@ public class DrivetrainProfile {
     }
 
     synchronized public DrivetrainProfile mirror() {
-        path = Pair.of(path.getRight(), path.getLeft());
-        return this;
+        return new DrivetrainProfile(Pair.of(path.getRight(), path.getLeft()));
     }
 
     synchronized public DrivetrainProfile invert() {
-        path = Pair.of(TrajectoryUtils.invert(path.getRight()), TrajectoryUtils.invert(path.getLeft()));
-        return this;
+        return new DrivetrainProfile(Pair.of(TrajectoryUtils.invert(path.getRight()), TrajectoryUtils.invert(path.getLeft())));
     }
 
     synchronized public DrivetrainProfile reverse() {
-        path = Pair.of(TrajectoryUtils.reverse(path.getLeft()), TrajectoryUtils.reverse(path.getRight()));
-        return this;
+        return new DrivetrainProfile(Pair.of(TrajectoryUtils.reverse(path.getLeft()), TrajectoryUtils.reverse(path.getRight())));
+    }
+
+    public int length() {
+        return Math.max(getLeft().length(), getRight().length());
     }
 
 

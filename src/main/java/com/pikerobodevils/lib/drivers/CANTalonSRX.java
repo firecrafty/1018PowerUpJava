@@ -213,12 +213,7 @@ public class CANTalonSRX extends TalonSRX implements SpeedController {
 
     @Override
     public ErrorCode pushMotionProfileTrajectory(TrajectoryPoint trajPt) {
-        if (!isLooperRunning) {
-            looperPeriod = trajPt.timeDur.value / 2000d;
-        } else {
-            looperPeriod = Math.min(trajPt.timeDur.value / 2000d, looperPeriod);
-        }
-        motionProfileLooper.startPeriodic(looperPeriod);
+        motionProfileLooper.startPeriodic(0.01);
         return super.pushMotionProfileTrajectory(trajPt);
     }
 
@@ -279,6 +274,7 @@ public class CANTalonSRX extends TalonSRX implements SpeedController {
     public void loadMotionProfile(Trajectory trajectory) {
         resetMotionProfile();
         for (Trajectory.Segment segment : trajectory.segments) {
+
             pushMotionProfileTrajectory(pathfinderSegmentToTalonPoint(segment));
         }
 

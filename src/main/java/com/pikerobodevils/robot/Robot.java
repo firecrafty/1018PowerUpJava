@@ -1,5 +1,8 @@
 package com.pikerobodevils.robot;
 
+import com.pikerobodevils.lib.motion.DrivetrainProfile;
+import com.pikerobodevils.lib.motion.ProfileGenerator;
+import com.pikerobodevils.lib.motion.SimpleProfileParser;
 import com.pikerobodevils.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -23,6 +26,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        System.out.println("LOADING");
+        DrivetrainProfile profile = SimpleProfileParser.getDrivetrainProfile("Center-LeftSwitch");
+        System.out.println("LOADED: " + profile.getRight().length()  + " poiints");
+        drivetrain.loadMotionProfile(profile);
+        drivetrain.startMotionProfile();
     }
 
     @Override
@@ -41,6 +49,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+        if(drivetrain.isProfileComplete()) {
+            System.out.println("STOPPED");
+            drivetrain.holdMotionProfile();
+        }
         Scheduler.getInstance().run();
     }
 
